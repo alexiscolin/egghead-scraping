@@ -1,4 +1,4 @@
-# 📥 Egghead-scraping
+# 📥 Egghead Scraping
 
 Really simple Egghead video downloader (thanks [Puppeteer](https://pptr.dev/)).
 It curently works with Github auth.
