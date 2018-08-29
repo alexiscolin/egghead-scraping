@@ -8,8 +8,11 @@ It curently works with Github auth.
 ## Getting Started
 
 Choose the course you want to scrape, copy the course url (eg: https://egghead.io/courses/build-a-desktop-application-with-electron).
+
 Change the id and psw variables inside the `src/env.js` file.
+
 Clone the repo, enter the downloaded folder, then **run the magic command `yarn get <myCourseURL>`.** Let Chromium start, parse the course and download every video, one by one.
+
 After the last download and 1min of inactivity Puppeteer will shut down the browser.
 
 ```bash
