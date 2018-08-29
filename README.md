@@ -1,7 +1,9 @@
 # 📥 Egghead Scraping
 
 Really simple Egghead video downloader (thanks [Puppeteer](https://pptr.dev/)).
-It curently works with Github auth.
+
+It scrapes every Egghead courses' lessons, create a folder into the download folder and get each video.
+Curently working with Github auth.
 
 *Because Puppeteer scrape the Egghead website thanks to their website DOM structure, it may be impossible to get videos course anymore if they change that structure*
 
@@ -9,7 +11,7 @@ It curently works with Github auth.
 
 Choose the course you want to scrape, copy the course url (eg: https://egghead.io/courses/build-a-desktop-application-with-electron).
 
-Change the id and psw variables inside the `src/env.js` file.
+Change the id, psw and download folder path variables inside the `src/env.js` file.
 
 Clone the repo, enter the downloaded folder, then **run the magic command `yarn get <myCourseURL>`.** Let Chromium start, parse the course and download every video, one by one.
 

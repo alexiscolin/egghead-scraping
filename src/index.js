@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
+const mkdirp = require('mkdirp');
 const env = require('./env.js');
-const URL = process.argv[2];
+const URL = process.argv[2]; // get URL to scrape
 
 (async () => {
   // dom element selectors
@@ -29,6 +30,14 @@ const URL = process.argv[2];
 
   // await page.waitFor(1500);  // time for loading SPA -> need it because of SPA...
   await page.goto(URL);
+  await page.evaluate(() => {
+    const titlePath = '#App-react-component > div > div.flex.flex-column.bg-base-secondary > div > div.bg-white.pb5-ns.pb4-m.pb4 > div > div.cf.pt3.flex.flex-row-l.flex-column > div.fl.w-100.w-100-m.w-50-ns.pa2.order-2.order-0-l.flex.false > div > div.flex-none.flex-m.flex-column.tc.tl-ns > span';
+    return document.querySelector(titlePath).innerText;
+  }).then((title)=>{
+    mkdirp(`${env.DDL_FILE}${title}`, err => {
+      err && console.error(err);
+    });
+  });
 
   // get all lessons URL
   const lessonURLS = await page.evaluate(() => {
@@ -50,7 +59,7 @@ const URL = process.argv[2];
     await page.goto(url); // go to the next video page
     await page.waitFor('body'); // time for launching ddl button -> need it because of SPA...
     await page.click(EGGHEAD_VIDEO_BTN).then(()=> console.log('Download video :' + url)) // ddl and log
-    await page.waitFor(1500); // time for launching download -> need to be in front of browser
+    await page.waitFor(2500); // time for launching download -> need to be in front of browser
     await lessonURLSIterator.next().done && await page.waitFor(1000 * 60).then(() => browser.close()); // if no more video -> shut down chromium -> 1min before closing
   }
 
