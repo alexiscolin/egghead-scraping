@@ -58,9 +58,10 @@ const URL = process.argv[2]; // get URL to scrape
   const getLessonVideo = async function(url) {
     await page.goto(url); // go to the next video page
     await page.waitFor('body'); // time for launching ddl button -> need it because of SPA...
+    await page.waitFor(500); // time for safety -> need it because of SPA...
     await page.click(EGGHEAD_VIDEO_BTN).then(()=> console.log('Download video :' + url)) // ddl and log
-    await page.waitFor(2500); // time for launching download -> need to be in front of browser
-    await lessonURLSIterator.next().done && await page.waitFor(1000 * 60).then(() => browser.close()); // if no more video -> shut down chromium -> 1min before closing
+    await page.waitFor(4000); // time for launching download -> need to be in front of browser
+    await lessonURLSIterator.next().done && await page.waitFor(1000 * 60 * 2).then(() => browser.close()); // if no more video -> shut down chromium -> 1min before closing
   }
 
   // Let's start scrapping
