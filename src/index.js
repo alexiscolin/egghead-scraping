@@ -27,8 +27,6 @@ const URL = process.argv[2]; // get URL to scrape
 
   await page.waitForNavigation({ waitUntil: 'networkidle2' });
   await page.waitFor('body'); // time for launching ddl button -> need it because of SPA...
-
-  // await page.waitFor(1500);  // time for loading SPA -> need it because of SPA...
   await page.goto(URL);
 
   // Get course title and create folder
