@@ -30,6 +30,8 @@ const URL = process.argv[2]; // get URL to scrape
 
   // await page.waitFor(1500);  // time for loading SPA -> need it because of SPA...
   await page.goto(URL);
+
+  // Get course title and create folder
   await page.evaluate(() => {
     const titlePath = '#App-react-component > div > div.flex.flex-column.bg-base-secondary > div > div.bg-white.pb5-ns.pb4-m.pb4 > div > div.cf.pt3.flex.flex-row-l.flex-column > div.fl.w-100.w-100-m.w-50-ns.pa2.order-2.order-0-l.flex.false > div > div.flex-none.flex-m.flex-column.tc.tl-ns > span';
     return document.querySelector(titlePath).innerText;
