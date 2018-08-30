@@ -7,7 +7,7 @@ Curently working with Github auth.
 
 **V2 - Replacement of Yeld generator function for Array.map in order to parallelize download !**
 
-> Because Puppeteer scrape the Egghead website thanks to their website DOM structure, it may be impossible to get videos course anymore if they change that structure*
+> Because Puppeteer scrape the Egghead website thanks to their website DOM structure, it may be impossible to get videos course anymore if they change that structure
 
 ## Getting Started
 
