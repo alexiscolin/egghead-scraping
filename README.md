@@ -25,7 +25,3 @@ After the last download, Puppeteer will shut down the browser.
 yarn get https://egghead.io/courses/build-a-desktop-application-with-electron
 
 ```
-
-## TODO
-
-Display the download progress.

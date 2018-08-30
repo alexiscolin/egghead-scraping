@@ -42,6 +42,14 @@ const URL = process.argv[2]; // get URL to scrape
     return [...document.querySelectorAll(EGGHEAD_URLS)].map(link => link.href);
   });
 
+  const lessonsCount = lessonURLS.length;
+  const generator = function* () {
+    for(let y = 1; y <= lessonsCount; y++){
+      yield y;
+    }
+  };
+  const progress = generator();
+
   // get link informations
   const findLink = async function(url) {
     // Multi pages -> increase speed
@@ -62,7 +70,7 @@ const URL = process.argv[2]; // get URL to scrape
       download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
         console.log('')
         console.log(ddlURL);
-        console.log(chalk.green('download done!')); // Display infos
+        console.log(chalk.green(`download done! — video ${progress.next().value}/${lessonsCount}`)); // Display infos and progress
       });
     });
   }
