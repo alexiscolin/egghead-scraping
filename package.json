@@ -1,6 +1,6 @@
 {
   "name": "egghead-scraping",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Egghead course videos downloader",
   "author": "Alexis Colin <nesquimo@gmail.com>",
   "main": "src/script.js",
@@ -8,7 +8,8 @@
     "get": "node src/index.js $URL"
   },
   "dependencies": {
-    "mkdirp": "^0.5.1",
+    "chalk": "^2.4.1",
+    "download": "^7.1.0",
     "puppeteer": "^1.7.0"
   },
   "license": "MIT"

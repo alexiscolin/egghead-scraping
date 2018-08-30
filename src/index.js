@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
-const mkdirp = require('mkdirp');
+const chalk = require('chalk');
+const download = require('download');
 const env = require('./env.js');
 const URL = process.argv[2]; // get URL to scrape
 
@@ -11,7 +12,7 @@ const URL = process.argv[2]; // get URL to scrape
   const EGGHEAD_VIDEO_BTN = '#App-react-component > div > div:nth-child(2) > section > div > div.relative.w-100 > section.w-100.pt2.pb3.pt0-l.pb0-l.css-ic4s7x > div > div.w-100.w-70-l.false > div.relative.items-center.justify-between.pv2.flex.css-1kldd4v > div.flex.items-center > div.ml3.dn.db-l > div';
 
   // Puppeteer action
-  const browser = await puppeteer.launch({ headless: false }); // no headless because of chromium bug https://bugs.chromium.org/p/chromium/issues/detail?id=696481
+  const browser = await puppeteer.launch({ headless: true }); // no headless because of chromium bug https://bugs.chromium.org/p/chromium/issues/detail?id=696481
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 700 })
   await page.goto('https://egghead.io/users/sign_in');
@@ -30,13 +31,9 @@ const URL = process.argv[2]; // get URL to scrape
   await page.goto(URL);
 
   // Get course title and create folder
-  await page.evaluate(() => {
+  const courseTitle = await page.evaluate(() => {
     const titlePath = '#App-react-component > div > div.flex.flex-column.bg-base-secondary > div > div.bg-white.pb5-ns.pb4-m.pb4 > div > div.cf.pt3.flex.flex-row-l.flex-column > div.fl.w-100.w-100-m.w-50-ns.pa2.order-2.order-0-l.flex.false > div > div.flex-none.flex-m.flex-column.tc.tl-ns > span';
     return document.querySelector(titlePath).innerText;
-  }).then((title)=>{
-    mkdirp(`${env.DDL_FILE}${title}`, err => {
-      err && console.error(err);
-    });
   });
 
   // get all lessons URL
@@ -45,25 +42,31 @@ const URL = process.argv[2]; // get URL to scrape
     return [...document.querySelectorAll(EGGHEAD_URLS)].map(link => link.href);
   });
 
-  // Generator for parsing every Lessons's URL
-  function* lessonURLSGen () {
-    for (let i = 1; i < lessonURLS.length; i++) {
-      getLessonVideo(lessonURLS[i]);
-      yield lessonURLS[i];
-    }
-  }
-
-  // Initialize iterator
-  const lessonURLSIterator = lessonURLSGen();
-  const getLessonVideo = async function(url) {
-    await page.goto(url); // go to the next video page
+  // get link informations
+  const findLink = async function(url) {
+    // multi pages -> increase speed
+    const page = await browser.newPage();
+    await page.goto(url);
     await page.waitFor('body'); // time for launching ddl button -> need it because of SPA...
-    await page.waitFor(500); // time for safety -> need it because of SPA...
-    await page.click(EGGHEAD_VIDEO_BTN).then(()=> console.log('Download video :' + url)) // ddl and log
-    await page.waitFor(4000); // time for launching download -> need to be in front of browser
-    await lessonURLSIterator.next().done && await page.waitFor(1000 * 60 * 2).then(() => browser.close()); // if no more video -> shut down chromium -> 1min before closing
+
+    // Get the ddl link
+    const pagedata = await page.evaluate(() => {
+      const data = JSON.parse(document.querySelector('.js-react-on-rails-component').innerText);
+      return data.lesson.download_url;
+    });
+
+    // Then, go there and download !
+    await page.goto(pagedata);
+    await page.waitFor('pre');
+    await page.evaluate(() => document.querySelector('pre').innerText).then(ddlURL => {
+      download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
+        console.log('')
+        console.log(ddlURL);
+        console.log(chalk.green('download done!')); // infos
+      });
+    });
   }
 
-  // Let's start scrapping
-  await getLessonVideo(lessonURLS[0]);
+  // Action !
+  await Promise.all(lessonURLS.map(url => findLink(url))).then(() => browser.close()); // then close browser
 })();
