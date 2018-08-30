@@ -12,7 +12,7 @@ const URL = process.argv[2]; // get URL to scrape
   const EGGHEAD_VIDEO_BTN = '#App-react-component > div > div:nth-child(2) > section > div > div.relative.w-100 > section.w-100.pt2.pb3.pt0-l.pb0-l.css-ic4s7x > div > div.w-100.w-70-l.false > div.relative.items-center.justify-between.pv2.flex.css-1kldd4v > div.flex.items-center > div.ml3.dn.db-l > div';
 
   // Puppeteer action
-  const browser = await puppeteer.launch({ headless: true }); // no headless because of chromium bug https://bugs.chromium.org/p/chromium/issues/detail?id=696481
+  const browser = await puppeteer.launch({ headless: false }); // no headless because of chromium bug https://bugs.chromium.org/p/chromium/issues/detail?id=696481
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 700 })
   await page.goto('https://egghead.io/users/sign_in');
@@ -56,7 +56,6 @@ const URL = process.argv[2]; // get URL to scrape
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitFor('body'); // Time for launching ddl button -> need it because of SPA...
-    await page.waitFor(1000);
 
     // Get the ddl link
     const pagedata = await page.evaluate(() => {
@@ -67,16 +66,18 @@ const URL = process.argv[2]; // get URL to scrape
     // Then, go there and download !
     await page.goto(pagedata);
     await page.waitFor('pre');
-    await page.waitFor(1000);
     await page.evaluate(() => document.querySelector('pre').innerText).then(ddlURL => {
       download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
+        const currentProgress = progress.next();
         console.log('')
         console.log(ddlURL);
-        console.log(chalk.green(`download done! — video ${progress.next().value}/${lessonsCount}`)); // Display infos and progress
+        console.log(chalk.green(`download done! — video ${currentProgress.value}/${lessonsCount}`)); // Display infos and progress
+
+        currentProgress.value === lessonsCount && browser.close();  // Finaly, close the browser
       });
     });
   }
 
   // Action !
-  await Promise.all(lessonURLS.map(url => findLink(url))).then(() => browser.close()); // Finaly, close the browser
+  await Promise.all(lessonURLS.map(url => findLink(url)));
 })();
