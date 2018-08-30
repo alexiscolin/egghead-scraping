@@ -56,6 +56,7 @@ const URL = process.argv[2]; // get URL to scrape
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitFor('body'); // Time for launching ddl button -> need it because of SPA...
+    await page.waitFor(1000);
 
     // Get the ddl link
     const pagedata = await page.evaluate(() => {
@@ -66,6 +67,7 @@ const URL = process.argv[2]; // get URL to scrape
     // Then, go there and download !
     await page.goto(pagedata);
     await page.waitFor('pre');
+    await page.waitFor(1000);
     await page.evaluate(() => document.querySelector('pre').innerText).then(ddlURL => {
       download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
         console.log('')
