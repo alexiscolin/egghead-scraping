@@ -17,10 +17,11 @@ Change the id, psw and download folder path variables inside the `src/env.js` fi
 
 Clone the repo, enter the downloaded folder, then **run the magic command `yarn get <myCourseURL>`.** Chromium starts, parses the course and downloads every video.
 
-After the last download,Puppeteer will shut down the browser.
+After the last download, Puppeteer will shut down the browser.
 
 ```bash
 
+# Exemple -> change the url below by the one you want
 yarn get https://egghead.io/courses/build-a-desktop-application-with-electron
 
 ```
