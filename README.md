@@ -5,7 +5,7 @@ Really simple Egghead video downloader (thanks [Puppeteer](https://pptr.dev/)).
 It scrapes every Egghead courses' lessons, create a folder into the download folder and get each video.
 Curently working with Github auth.
 
-**V2 - Replacement of Yeld generator function for Array.map in order to parallelize download !**
+**V2 - Replacement of Yield generator function for Array.map in order to parallelize download !**
 
 > Because Puppeteer scrape the Egghead website thanks to their website DOM structure, it may be impossible to get videos course anymore if they change that structure
 
