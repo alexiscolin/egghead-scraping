@@ -5,7 +5,7 @@ const env = require('./env.js');
 const URL = process.argv[2]; // get URL to scrape
 
 (async () => {
-  // dom element selectors
+  // DOM element selectors
   const USERNAME_SELECTOR = '#login_field';
   const PASSWORD_SELECTOR = '#password';
   const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
@@ -36,7 +36,7 @@ const URL = process.argv[2]; // get URL to scrape
     return document.querySelector(titlePath).innerText;
   });
 
-  // get all lessons URL
+  // Get all lessons URL
   const lessonURLS = await page.evaluate(() => {
     const EGGHEAD_URLS = '#App-react-component > div > div.flex.flex-column.bg-base-secondary > div > div.mt3.bg-gray.w-100.flex.items-center.justify-center > div > div > div > div div.flex.flex-column.flex-grow-1.ph2.pv3 > a';
     return [...document.querySelectorAll(EGGHEAD_URLS)].map(link => link.href);
@@ -44,10 +44,10 @@ const URL = process.argv[2]; // get URL to scrape
 
   // get link informations
   const findLink = async function(url) {
-    // multi pages -> increase speed
+    // Multi pages -> increase speed
     const page = await browser.newPage();
     await page.goto(url);
-    await page.waitFor('body'); // time for launching ddl button -> need it because of SPA...
+    await page.waitFor('body'); // Time for launching ddl button -> need it because of SPA...
 
     // Get the ddl link
     const pagedata = await page.evaluate(() => {
@@ -62,11 +62,11 @@ const URL = process.argv[2]; // get URL to scrape
       download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
         console.log('')
         console.log(ddlURL);
-        console.log(chalk.green('download done!')); // infos
+        console.log(chalk.green('download done!')); // Display infos
       });
     });
   }
 
   // Action !
-  await Promise.all(lessonURLS.map(url => findLink(url))).then(() => browser.close()); // then close browser
+  await Promise.all(lessonURLS.map(url => findLink(url))).then(() => browser.close()); // Finaly, close the browser
 })();
