@@ -55,6 +55,7 @@ const URL = process.argv[2]; // get URL to scrape
     // Multi pages -> increase speed
     const page = await browser.newPage();
     await page.goto(url);
+    await page.waitFor(1000);
     await page.waitFor('body'); // Time for launching ddl button -> need it because of SPA...
 
     // Get the ddl link
@@ -66,6 +67,7 @@ const URL = process.argv[2]; // get URL to scrape
     // Then, go there and download !
     await page.goto(pagedata);
     await page.waitFor('pre');
+    await page.waitFor(1000);
     await page.evaluate(() => document.querySelector('pre').innerText).then(ddlURL => {
       download(ddlURL, `${env.DDL_FILE}${courseTitle}`).then(() => {
         const currentProgress = progress.next();
