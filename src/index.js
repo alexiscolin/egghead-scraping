@@ -42,6 +42,7 @@ const URL = process.argv[2]; // get URL to scrape
     return [...document.querySelectorAll(EGGHEAD_URLS)].map(link => link.href);
   });
 
+  // count generator function
   const lessonsCount = lessonURLS.length;
   const generator = function* () {
     for(let y = 1; y <= lessonsCount; y++){

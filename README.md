@@ -11,11 +11,10 @@ Curently working with Github auth.
 
 ## Getting Started
 
-Choose the course you want to scrape, copy the course url (eg: https://egghead.io/courses/build-a-desktop-application-with-electron).
-
-Change the id, psw and download folder path variables inside the `src/env.js` file.
-
-Clone the repo, enter the downloaded folder, then **run the magic command `yarn get <myCourseURL>`.** Chromium starts, parses the course and downloads every video.
+1. Clone the repo,
+2. Change the id, psw and download folder path variables inside the `src/env.js` file.
+3. Choose the course you want to scrape, copy the course url (eg: https://egghead.io/courses/build-a-desktop-application-with-electron).
+4. Enter the cloned repo folder, then **run the magic command `yarn get <myCourseURL>`.** Chromium starts, parses the course and downloads every video.
 
 After the last download, Puppeteer will shut down the browser.
 
